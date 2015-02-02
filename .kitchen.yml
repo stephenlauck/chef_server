@@ -22,4 +22,11 @@ suites:
     run_list:
       - recipe[chef-server::default]
       - recipe[chef-server::manage]
+      - recipe[chef-server::admin_org]
     attributes:
+      admin:
+        username: flock
+        firstname: Florian
+        lastname: Lock
+        email: ops@example.com
+        password: DontUseThis4Real
