@@ -1,12 +1,12 @@
 #
-# Cookbook Name:: chef-server
+# Cookbook Name:: chef_server
 # Spec:: default
 #
 # Copyright (c) 2015 The Authors, All Rights Reserved.
 
 require 'spec_helper'
 
-describe 'chef-server::default' do
+describe 'chef_server::default' do
 
   context 'When all attributes are default, on an unspecified platform' do
 

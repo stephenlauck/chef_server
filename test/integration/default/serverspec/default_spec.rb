@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'chef-server::default' do
+describe 'chef_server::default' do
 
   # Serverspec examples can be found at
   # http://serverspec.org/resource_types.html
