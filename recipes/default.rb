@@ -13,7 +13,10 @@ directory '/etc/opscode-analytics' do
   recursive true
 end
 
-chef_server_ingredient 'chef-server-core'
+chef_server_ingredient 'chef-server-core' do
+  reconfigure true
+  action :install
+end
 
 chef_server_user 'flock' do
   firstname 'Florian'
