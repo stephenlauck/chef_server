@@ -20,6 +20,7 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[chef-server::default]
-      - recipe[chef-server::manage]
+      - recipe[chef_server::default]
+      - recipe[chef_server::manage]
     attributes:
+
