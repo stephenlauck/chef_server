@@ -18,9 +18,16 @@ platforms:
   - name: centos-6.5
 
 suites:
-  - name: default
+  - name: standalone
     run_list:
       - recipe[chef_server::default]
       - recipe[chef_server::manage]
     attributes:
 
+  - name: delivery_stack
+    run_list:
+      - recipe[chef_server::default]
+      - recipe[chef_server::manage]
+      - recipe[chef_server::push_jobs]
+      - recipe[chef_server::reporting]
+    attributes:
