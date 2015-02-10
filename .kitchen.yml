@@ -35,6 +35,7 @@ suites:
   - name: analytics
     run_list:
       - recipe[base_test]
+      - recipe[analytics_test]
       - recipe[chef_server::analytics]
     attributes:
     driver_config:
