@@ -3,12 +3,9 @@ driver:
   name: vagrant
 
 driver_config:
-  network:
-    - ["forwarded_port", {guest: 443, host: 9443, auto_correct: true}]
-    - ["private_network", {ip: "33.33.33.10"}]
   customize:
-    memory: 4096
-    cpus: 4
+    memory: 2048
+    cpus: 2
 
 provisioner:
   name: chef_zero
@@ -20,14 +17,27 @@ platforms:
 suites:
   - name: standalone
     run_list:
+      - recipe[base_test]
       - recipe[chef_server::default]
+      - recipe[admin_org_test]
       - recipe[chef_server::manage]
-    attributes:
-
-  - name: delivery_stack
-    run_list:
-      - recipe[chef_server::default]
-      - recipe[chef_server::manage]
-      - recipe[chef_server::push_jobs]
       - recipe[chef_server::reporting]
+      - recipe[analytics_test]
+      - recipe[chef_server::_analytics_chef_server]
     attributes:
+      chef_server:
+        backend_vip: '33.33.33.10'
+    driver_config:
+      require_chef_omnibus: true
+      network:
+      - ["private_network", {ip: "33.33.33.10"}]
+
+  - name: analytics
+    run_list:
+      - recipe[base_test]
+      - recipe[chef_server::analytics]
+    attributes:
+    driver_config:
+      require_chef_omnibus: true
+      network:
+      - ["private_network", {ip: "33.33.33.11"}]
