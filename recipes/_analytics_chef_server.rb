@@ -18,6 +18,7 @@ end
 template "/etc/opscode/chef-server.rb" do
   source "chef-server.rb.erb"
   variables(
+    :api_fqdn => node['chef_server']['fqdn'],
     :analytics_redirect_url => "https://#{node['chef_server']['analytics']['fqdn']}/",
     :backend_vip => node['chef_server']['backend_vip']
   )
