@@ -37,7 +37,7 @@ suites:
       - recipe[chef_server_test::admin_org]
       - recipe[chef_server::manage]
       - recipe[chef_server::reporting]
-      - recipe[chef_server_test::analytics]
+      - recipe[chef_server_test::hostsfile]
       - recipe[chef_server::_analytics_chef_server]
     attributes:
       chef_server:
@@ -50,7 +50,7 @@ suites:
   - name: analytics
     run_list:
       - recipe[chef_server_test]
-      - recipe[chef_server_test::analytics]
+      - recipe[chef_server_test::hostsfile]
       - recipe[chef_server::analytics]
     attributes:
     driver_config:
