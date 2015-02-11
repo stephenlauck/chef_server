@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'admin_org_test::default' do
+describe 'chef_server_test::default' do
 
   # Serverspec examples can be found at
   # http://serverspec.org/resource_types.html

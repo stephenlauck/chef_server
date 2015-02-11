@@ -1,12 +1,12 @@
 #
-# Cookbook Name:: analytics_test
+# Cookbook Name:: chef_server_test
 # Spec:: default
 #
 # Copyright (c) 2015 The Authors, All Rights Reserved.
 
 require 'spec_helper'
 
-describe 'analytics_test::default' do
+describe 'chef_server_test::default' do
 
   context 'When all attributes are default, on an unspecified platform' do
 
