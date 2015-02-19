@@ -18,24 +18,24 @@ chef_server_ingredient 'chef-server-core' do
   action :install
 end
 
-chef_server_user 'flock' do
-  firstname 'Florian'
-  lastname 'Lock'
-  email 'ops@example.com'
-  password 'DontUseThis4Real'
-  private_key_path '/tmp/flock.pem'
-  action :create
+file '/etc/opscode/private-chef.rb' do
+  content <<-EOH
+# api_fqdn '#{node['fqdn']}'
+# dark_launch['actions'] = true
+# rabbitmq['vip'] = '#{node['ipaddress']}'
+# rabbitmq['node_ip_address'] = '0.0.0.0'
+nginx['enable_non_ssl'] = true
+EOH
   notifies :reconfigure, 'chef_server_ingredient[chef-server-core]'
 end
 
-chef_server_org 'example' do
-  org_long_name 'Example Organization'
-  org_private_key_path '/tmp/example-validator.pem'
-  action :create
-  notifies :reconfigure, 'chef_server_ingredient[chef-server-core]'
+# These two resources set permissions on the files to make them
+# readable as a workaround for
+# https://github.com/opscode/chef-provisioning/issues/174
+file '/etc/opscode-analytics/actions-source.json' do
+  mode 00755
 end
 
-chef_server_org 'example' do
-  admins %w{ flock }
-  action :add_admin
+file '/etc/opscode-analytics/webui_priv.pem' do
+  mode 00755
 end
