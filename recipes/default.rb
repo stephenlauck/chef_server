@@ -5,7 +5,6 @@
 # Copyright (c) 2015 The Authors, All Rights Reserved.
 
 directory '/etc/opscode' do
-  mode 0755
   recursive true
 end
 
@@ -14,28 +13,26 @@ directory '/etc/opscode-analytics' do
 end
 
 chef_server_ingredient 'chef-server-core' do
-  reconfigure true
-  action :install
+  version node['chef_server']['version']
+  action [:install, :reconfigure]
 end
 
-file '/etc/opscode/private-chef.rb' do
-  content <<-EOH
-# api_fqdn '#{node['fqdn']}'
-# dark_launch['actions'] = true
-# rabbitmq['vip'] = '#{node['ipaddress']}'
-# rabbitmq['node_ip_address'] = '0.0.0.0'
-nginx['enable_non_ssl'] = true
-EOH
+# create the initial chef-server config file
+template '/etc/opscode/chef_server.rb' do
+  source 'chef-server.rb.erb'
+  owner 'root'
+  group 'root'
+  action :create
   notifies :reconfigure, 'chef_server_ingredient[chef-server-core]'
 end
 
-# These two resources set permissions on the files to make them
-# readable as a workaround for
-# https://github.com/opscode/chef-provisioning/issues/174
-file '/etc/opscode-analytics/actions-source.json' do
-  mode 00755
-end
-
-file '/etc/opscode-analytics/webui_priv.pem' do
-  mode 00755
+ruby_block 'ensure node can resolve API FQDN' do
+  block do
+    fe = Chef::Util::FileEdit.new('/etc/hosts')
+    fe.insert_line_if_no_match(/#{node['chef_server']['api_fqdn']}/,
+      "127.0.0.1 #{node['chef_server']['api_fqdn']}")
+    fe.write_file
+  end
+  not_if { node['chef_server']['api_fqdn'].nil? || node['chef_server']['api_fqdn'].empty? }
+  not_if { Resolv.getaddress(node['chef_server']['api_fqdn']) rescue false } # host resolves
 end

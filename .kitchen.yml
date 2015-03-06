@@ -3,31 +3,50 @@ driver:
   name: vagrant
 
 driver_config:
-  network:
-    - ["forwarded_port", {guest: 443, host: 9443, auto_correct: true}]
-    - ["private_network", {ip: "33.33.33.10"}]
   customize:
-    memory: 4096
-    cpus: 4
+    memory: 1024
+    cpus: 2
 
 provisioner:
   name: chef_zero
 
 platforms:
-  - name: ubuntu-12.04
-  - name: centos-6.5
+  - name: ubuntu-14.04
+  - name: centos-6.6
 
 suites:
   - name: standalone
     run_list:
       - recipe[chef_server::default]
-      - recipe[chef_server::manage]
+      - recipe[chef_server::add_ons]
+      - recipe[test::user_and_org]
     attributes:
+      add_ons:
+        - opscode-manage
+    driver_config:
+      network:
+        - ["private_network", {ip: "33.33.33.10"}]
 
-  - name: delivery_stack
+  - name: analytics
     run_list:
       - recipe[chef_server::default]
-      - recipe[chef_server::manage]
-      - recipe[chef_server::push_jobs]
-      - recipe[chef_server::reporting]
+      - recipe[chef_server::add_ons]
     attributes:
+      add_ons:
+        - opscode-analytics
+    driver_config:
+      network:
+        - ["private_network", {ip: "33.33.33.11"}]
+
+  - name: delivery
+    run_list:
+      - recipe[chef_server::default]
+      - recipe[chef_server::add_ons]
+    attributes:
+      add_ons:
+        - opscode-manage
+        - opscode-reporting
+        - opscode-push-jobs-server
+    driver_config:
+      network:
+        - ["private_network", {ip: "33.33.33.12"}]
